@@ -81,7 +81,7 @@ def readLegoSetStreams(filename:String,predicate:LegoSet=>Boolean,limit:Int):IO[
 Files[IO].readAll(Path(filename))
 .through(text.utf8.decode)
 .through(text.lines)
-.map(parseLegoSet)
+.parEvalMapUnbounded(s=>IO(parseLegoSet(s)))
 .unNone
 .filter(predicate)
 .take(limit)
